@@ -1,0 +1,23 @@
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     const key = event.key;
+
+  //     // Vérification des touches numériques et des opérateurs
+  //     if (!isNaN(key) || key === ".") {
+  //       handle(key);
+  //     } else if (key === "Enter") {
+  //       handle("=");
+  //     } else if (key === "Backspace") {
+  //       handle("CE");
+  //     } else if (key === "Escape") {
+  //       handle("C");
+  //     } else if (["+", "-", "*", "/"].includes(key)) {
+  //       handle(key); // Envoyer directement les opérateurs
+  //     }
+  //   };
+
+  //   document.addEventListener("keydown", handleKeyDown);
+  //   return () => {
+  //     document.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
