@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { evaluate } from 'mathjs'; // Assurez-vous d'avoir installé mathjs avec `npm install mathjs`
 
 function App() {
   const [screenValue, setScreenValue] = useState("0");
@@ -41,7 +42,8 @@ function App() {
     } else if (value === "=") {
       if (currentOperation.firstOperand && currentOperation.operator && currentOperation.secondOperand) {
         try {
-          const result = eval(`${currentOperation.firstOperand}${currentOperation.operator}${currentOperation.secondOperand}`);
+          const expression = `${currentOperation.firstOperand}${currentOperation.operator}${currentOperation.secondOperand}`;
+          const result = evaluate(expression);
           setScreenValue(result.toString());
           setCurrentOperation({
             firstOperand: result.toString(),
