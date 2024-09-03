@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { evaluate } from 'mathjs'; // Assurez-vous d'avoir installé mathjs avec `npm install mathjs`
+import { evaluate } from 'mathjs';
 
 function App() {
   const [screenValue, setScreenValue] = useState("0");
@@ -14,33 +14,37 @@ function App() {
   function handle(value) {
     if (!isNaN(value) || value === ".") {
       if (currentOperation.operator) {
-        if (value === ".") {
-          if (!currentOperation.secondOperand || currentOperation.secondOperand.includes(".")) return;
-        }
-        setCurrentOperation(prev => ({
+        if (value === "." && currentOperation.secondOperand?.includes(".")) return;
+        setCurrentOperation((prev) => ({
           ...prev,
-          secondOperand: prev.secondOperand ? prev.secondOperand + value : value
+          secondOperand: prev.secondOperand ? prev.secondOperand + value : value,
         }));
-        setScreenValue(prevValue => prevValue === "0" ? value : prevValue + value);
+        setScreenValue((prevValue) =>
+          prevValue === "0" ? value : prevValue + value
+        );
       } else {
-        if (value === ".") {
-          if (!currentOperation.firstOperand || currentOperation.firstOperand.includes(".")) return;
-        }
-        setCurrentOperation(prev => ({
+        if (value === "." && currentOperation.firstOperand?.includes(".")) return;
+        setCurrentOperation((prev) => ({
           ...prev,
-          firstOperand: prev.firstOperand ? prev.firstOperand + value : value
+          firstOperand: prev.firstOperand ? prev.firstOperand + value : value,
         }));
-        setScreenValue(prevValue => prevValue === "0" ? value : prevValue + value);
+        setScreenValue((prevValue) =>
+          prevValue === "0" ? value : prevValue + value
+        );
       }
     } else if (value === "C") {
       setScreenValue("0");
       setCurrentOperation({
         firstOperand: null,
         operator: null,
-        secondOperand: null
+        secondOperand: null,
       });
     } else if (value === "=") {
-      if (currentOperation.firstOperand && currentOperation.operator && currentOperation.secondOperand) {
+      if (
+        currentOperation.firstOperand &&
+        currentOperation.operator &&
+        currentOperation.secondOperand
+      ) {
         try {
           const expression = `${currentOperation.firstOperand}${currentOperation.operator}${currentOperation.secondOperand}`;
           const result = evaluate(expression);
@@ -48,34 +52,43 @@ function App() {
           setCurrentOperation({
             firstOperand: result.toString(),
             operator: null,
-            secondOperand: null
+            secondOperand: null,
           });
         } catch (error) {
           console.error("Error evaluating expression:", error);
         }
       }
     } else if (value === "CE") {
-      setScreenValue(prevValue => (prevValue.length > 1 ? prevValue.slice(0, -1) : "0"));
+      setScreenValue((prevValue) =>
+        prevValue.length > 1 ? prevValue.slice(0, -1) : "0"
+      );
     } else if (value === "%") {
-      setScreenValue(prevValue => (parseFloat(prevValue) / 100).toString());
+      setScreenValue((prevValue) => (parseFloat(prevValue) / 100).toString());
     } else if (value === "+/-") {
       if (currentOperation.operator) {
-        setCurrentOperation(prev => ({
+        setCurrentOperation((prev) => ({
           ...prev,
-          secondOperand: prev.secondOperand ? (-parseFloat(prev.secondOperand)).toString() : null
+          secondOperand: prev.secondOperand
+            ? (-parseFloat(prev.secondOperand)).toString()
+            : null,
         }));
-        setScreenValue(prevValue => (-parseFloat(prevValue)).toString());
+        setScreenValue((prevValue) => (-parseFloat(prevValue)).toString());
       } else {
-        setCurrentOperation(prev => ({
+        setCurrentOperation((prev) => ({
           ...prev,
-          firstOperand: prev.firstOperand ? (-parseFloat(prev.firstOperand)).toString() : null
+          firstOperand: prev.firstOperand
+            ? (-parseFloat(prev.firstOperand)).toString()
+            : null,
         }));
-        setScreenValue(prevValue => (-parseFloat(prevValue)).toString());
+        setScreenValue((prevValue) => (-parseFloat(prevValue)).toString());
       }
     } else {
-      setCurrentOperation(prev => ({
+      if (!currentOperation.firstOperand) {
+        return;
+      }
+      setCurrentOperation((prev) => ({
         ...prev,
-        operator: value
+        operator: value,
       }));
       setScreenValue("0");
     }
